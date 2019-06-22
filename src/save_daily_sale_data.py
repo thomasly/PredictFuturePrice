@@ -12,8 +12,6 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from utils import get_logger
-
 
 def create_empty_data_array(n_rows, n_groups, n_items):
   return np.zeros((n_rows, n_groups*n_items))
@@ -73,6 +71,11 @@ def create_daily_sale_data(csv_file):
 
 
 if __name__ == "__main__":
-  logger = get_logger("create_daily_data_array")
-  data_array = create_daily_sale_data("../data/sales_train.csv.gz")
-  logger.info(data_array[:2])
+  import argparse
+  parser = argparse.ArgumentParser()
+  parser.add_argument("-i", help="Filename of the input csv file")
+  parser.add_argument("-f", help="Filename for saving data array.")
+  args = parser.parse_args()
+
+  data_array = create_daily_sale_data(args.i)
+  np.savetxt(args.f, data_array, fmt="%d", delimiter=",")
